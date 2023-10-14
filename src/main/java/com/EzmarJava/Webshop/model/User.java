@@ -19,16 +19,27 @@ public class User extends AbstractTimeEntity
     private Long id;
 
     private String username;
+    private String firstname;
+    private String lastname;
     private String email;
     private String password;
     private String phone;
     private String address;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_junction",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     Set<Role> authorities;
+
+    // Custom constructor for data seeding
+    public User(String username, String email, String password, Set<Role> authorities)
+    {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
 }
