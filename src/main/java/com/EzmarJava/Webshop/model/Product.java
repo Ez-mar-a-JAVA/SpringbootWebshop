@@ -21,7 +21,8 @@ public class Product {
    private double price ;
     String image;
     //ezt máshogy kell https://stackoverflow.com/questions/21059451/cannot-declare-list-property-in-the-jpa-entity-class-it-says-basic-attribute
-    private List<String> galllery;
+    //private List<String> galllery;
+    private String gallery; 
     private  int quantity;
     @ManyToOne
     private Category category;
