@@ -5,21 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Quantity {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private long productId;
-    private int quantity ;
-    @ManyToOne
-    Cart cart;
-    @ManyToOne
-    Order order;
-
-
+    private int quantity;
+    @OneToMany
+    List<Product> products;
+    @OneToMany
+    List <Quantity> quantities;
 
 }
