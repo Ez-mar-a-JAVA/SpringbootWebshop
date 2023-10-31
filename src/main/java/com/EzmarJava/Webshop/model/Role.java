@@ -17,4 +17,9 @@ public class Role
     private Long id;
 
     private String authority;
+
+    public Role(String authority)
+    {
+        this.authority = authority;
+    }
 }
