@@ -25,6 +25,8 @@ public class User extends AbstractTimeEntity
     private String password;
     private String phone;
     private String address;
+    @OneToMany
+   private Set<Order>orders;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
