@@ -5,21 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Role
-{
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
     private Long id;
+    @ManyToOne
+    private User user ;
+    private   double price ;
+    private int quantity;
+    @OneToMany
+    private List<Product> products;
+    @OneToMany
+    private List<Quantity>quantities;
 
-    private String authority;
 
-    public Role(String authority)
-    {
-        this.authority = authority;
-    }
 }

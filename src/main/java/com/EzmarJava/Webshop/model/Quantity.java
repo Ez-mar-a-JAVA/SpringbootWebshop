@@ -6,20 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Role
-{
+public class Quantity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
     private Long id;
+    private long productId;
+    private int quantity ;
+    @ManyToOne
+    Cart cart;
+    @ManyToOne
+    Order order;
 
-    private String authority;
 
-    public Role(String authority)
-    {
-        this.authority = authority;
-    }
+
 }
