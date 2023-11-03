@@ -27,6 +27,7 @@ public class Product {
     @ManyToOne
     private Category category;
     @ManyToOne
+    @JoinColumn(name = "OrderCol")
      private Order order;
 
 

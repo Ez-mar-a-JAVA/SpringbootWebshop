@@ -18,6 +18,7 @@ public class Quantity {
     @ManyToOne
     Cart cart;
     @ManyToOne
+    @JoinColumn(name = "`OrderCol")
     Order order;
 
 
