@@ -17,13 +17,13 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, optional = false)
     private User user ;
     private   double price ;
     private int quantity;
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private List<Product> products;
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private List<Quantity>quantities;
 
 
