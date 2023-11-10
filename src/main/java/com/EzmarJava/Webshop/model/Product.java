@@ -24,10 +24,12 @@ public class Product {
     //private List<String> galllery;
     private String gallery; 
     private  int quantity;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, optional = false)
     private Category category;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @JoinColumn(name = "orderCol")
      private Order order;
-
+    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    private Cart cart;
 
 }
