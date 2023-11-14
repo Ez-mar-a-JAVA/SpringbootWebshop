@@ -14,21 +14,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-   private  String title ;
-   private String description;
-   private double price ;
-    String image;
-    //ezt máshogy kell https://stackoverflow.com/questions/21059451/cannot-declare-list-property-in-the-jpa-entity-class-it-says-basic-attribute
-    //private List<String> galllery;
-    private String gallery; 
+    @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    private String title ;
+    private String description;
+    private double price ;
+    private String image;
+
     private  int quantity;
     @ManyToOne(fetch=FetchType.EAGER, optional = false)
     private Category category;
     @ManyToOne(fetch=FetchType.EAGER, optional = false)
     @JoinColumn(name = "orderCol")
-     private Order order;
+    private Order order;
     @ManyToOne(fetch=FetchType.EAGER, optional = false)
     private Cart cart;
 
