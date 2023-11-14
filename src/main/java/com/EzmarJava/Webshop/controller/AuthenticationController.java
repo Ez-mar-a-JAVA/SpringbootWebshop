@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthenticationController
 {
-    private UserService userService;
+    private final UserService userService;
 
     public AuthenticationController(UserService userService)
     {
@@ -67,20 +67,6 @@ public class AuthenticationController
     @GetMapping("/")
     public String testGuest()
     {
-        return "guestTest";
-    }
-
-    // TEST ROUTE WILL BE REMOVED LATER
-    @GetMapping("/admin")
-    public String testAdmin()
-    {
-        return "adminTest";
-    }
-
-    // TEST ROUTE WILL BE REMOVED LATER
-    @GetMapping("/protected")
-    public String protectedTest()
-    {
-        return "protectedTest";
+        return "home";
     }
 }
