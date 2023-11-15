@@ -69,4 +69,10 @@ public class AuthenticationController
     {
         return "home";
     }
+
+    @GetMapping("/admin")
+    public String admin()
+    {
+        return "admin/admin";
+    }
 }
