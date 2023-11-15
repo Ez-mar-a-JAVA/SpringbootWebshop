@@ -1,6 +1,7 @@
 package com.EzmarJava.Webshop.controller;
 
-import com.EzmarJava.Webshop.dto.CreateCategoryDTO;
+import com.EzmarJava.Webshop.dto.category.CreateCategoryDTO;
+import com.EzmarJava.Webshop.dto.category.UpdateCategoryDTO;
 import com.EzmarJava.Webshop.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class CategoryController
     public String createCategoryPage(Model model)
     {
         model.addAttribute("category", new CreateCategoryDTO());
-        return "admin/create_category";
+        return "category/create_category";
     }
 
     // Handles Create Category form
@@ -35,7 +36,7 @@ public class CategoryController
         if(bindingResult.hasErrors())
         {
             model.addAttribute("category", createCategoryDTO);
-            return "admin/create_category";
+            return "category/create_category";
         }
 
         categoryService.createCategory(createCategoryDTO);
@@ -47,7 +48,7 @@ public class CategoryController
     public String categoriesPage(Model model)
     {
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "admin/categories";
+        return "category/categories";
     }
 
     // Handles Delete Category
@@ -56,5 +57,27 @@ public class CategoryController
     {
         categoryService.deleteCategory(id);
         return "redirect:/admin/categories";
+    }
+
+    // Shows Update Category Page
+    @GetMapping("/admin/categories/update/{id}")
+    public String updateCategoryPage(@PathVariable Long id, Model model)
+    {
+        model.addAttribute("category", categoryService.getCategoryById(id));
+        return "category/update_category";
+    }
+
+    // Handles update category
+    @PostMapping("/admin/categories/update/{id}")
+    public String updateCategory(@Valid @ModelAttribute UpdateCategoryDTO updateCategoryDTO, BindingResult bindingResult, Model model)
+    {
+        if(bindingResult.hasErrors())
+        {
+            model.addAttribute("category", updateCategoryDTO);
+            return "category/update_category";
+        }
+
+        categoryService.updateCategory(updateCategoryDTO);
+        return "redirect:/admin/categories/update/{id}";
     }
 }

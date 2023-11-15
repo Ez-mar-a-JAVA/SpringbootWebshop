@@ -1,4 +1,4 @@
-package com.EzmarJava.Webshop.dto;
+package com.EzmarJava.Webshop.dto.category;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCategoryDTO
+public class UpdateCategoryDTO
 {
-    @NotEmpty(message = "Name is required!")
+    private Long id;
+
+    @NotEmpty(message = "Name must not be empty")
     private String name;
+
 }

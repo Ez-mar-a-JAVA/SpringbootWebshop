@@ -33,7 +33,7 @@
                 <td th:text="${category.id}"></td>
                 <td th:text="${category.name}"></td>
                 <td class="d-flex flex-row text-center justify-content-center align-items-center">
-                    <a class="btn btn-primary custom-btn">Edit</a>
+                    <a th:href="@{/admin/categories/update/{id}(id=${category.id})}" class="btn btn-primary custom-btn">Edit</a>
                     <form th:action="@{/admin/categories/delete/{id}(id=${category.id})}" class="form-text d-flex align-items-center m-0" th:object="${category}" method="post">
                         <button type="button" data-bs-toggle="modal" th:data-bs-target="'#confirmDeleteModal-' + ${category.id}" class="btn btn-danger custom-btn">Delete</button>
 

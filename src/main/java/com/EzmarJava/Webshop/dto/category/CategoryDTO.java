@@ -1,4 +1,4 @@
-package com.EzmarJava.Webshop.dto;
+package com.EzmarJava.Webshop.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
