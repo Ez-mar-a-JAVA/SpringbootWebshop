@@ -32,12 +32,12 @@ public class ProductServiceImpl implements ProductService
         MultipartFile image = createProductDTO.getImage();
 
         // Store file on disk by relative path
-        fileStorageService.store(image, "src/main/resources/photos/");
+        String filePath = fileStorageService.store(image, "src/main/resources/photos/");
 
         Product product = modelMapper.map(createProductDTO, Product.class);
 
         // Set image path
-        product.setImage("src/main/resources/photos/"+image.getOriginalFilename());
+        product.setImage(filePath);
 
         // Save product to DB
         productRepository.save(product);

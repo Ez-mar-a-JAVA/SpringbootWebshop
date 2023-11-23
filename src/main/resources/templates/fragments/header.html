@@ -74,6 +74,15 @@
                     </ul>
                 </li>
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Products
+                    </a>
+                    <ul class="dropdown-menu bg-dark">
+                        <li><a class="dropdown-item text-light" th:href="@{/admin/create-product}">Create Category</a></li>
+                    </ul>
+                </li>
+
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a aria-current="page" class="nav-link active" th:href="@{/logout}" >Log out</a>
                 </li>
