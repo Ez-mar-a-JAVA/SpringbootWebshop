@@ -1,5 +1,6 @@
 package com.EzmarJava.Webshop.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -28,6 +29,7 @@ public class WebSecurity
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize ->
                         authorize
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAnyRole("ADMIN")
                                 .requestMatchers(new AntPathRequestMatcher("/protected/**")).authenticated()
                                 .anyRequest().permitAll()
