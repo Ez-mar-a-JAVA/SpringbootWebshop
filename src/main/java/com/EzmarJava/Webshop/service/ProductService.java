@@ -1,10 +1,12 @@
 package com.EzmarJava.Webshop.service;
 
 import com.EzmarJava.Webshop.dto.product.CreateProductDTO;
+import com.EzmarJava.Webshop.dto.product.ProductDTO;
 
-import java.io.IOException;
+import java.util.List;
 
 public interface ProductService
 {
-    void createProduct(CreateProductDTO createProductDTO) throws IOException;
+    void createProduct(CreateProductDTO createProductDTO);
+    List<ProductDTO> findAllProducts();
 }

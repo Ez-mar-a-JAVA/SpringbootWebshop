@@ -35,6 +35,6 @@ public class FileStorageServiceImpl implements FileStorageService
             e.printStackTrace();
         }
 
-        return destination+fileName;
+        return fileName;
     }
 }

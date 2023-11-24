@@ -48,4 +48,11 @@ public class ProductController
 
         return "redirect:/admin/create-product";
     }
+
+    @GetMapping("/admin/products")
+    public String products(Model model)
+    {
+        model.addAttribute("products", productService.findAllProducts());
+        return "product/products_admin";
+    }
 }

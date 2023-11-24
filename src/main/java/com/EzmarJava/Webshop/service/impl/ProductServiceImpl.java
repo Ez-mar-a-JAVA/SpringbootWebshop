@@ -1,6 +1,7 @@
 package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.product.CreateProductDTO;
+import com.EzmarJava.Webshop.dto.product.ProductDTO;
 import com.EzmarJava.Webshop.model.Product;
 import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.service.FileStorageService;
@@ -9,7 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService
@@ -32,7 +34,7 @@ public class ProductServiceImpl implements ProductService
         MultipartFile image = createProductDTO.getImage();
 
         // Store file on disk by relative path
-        String filePath = fileStorageService.store(image, "src/main/resources/photos/");
+        String filePath = fileStorageService.store(image, "src/main/resources/static/images/");
 
         Product product = modelMapper.map(createProductDTO, Product.class);
 
@@ -41,5 +43,11 @@ public class ProductServiceImpl implements ProductService
 
         // Save product to DB
         productRepository.save(product);
+    }
+
+    @Override
+    public List<ProductDTO> findAllProducts()
+    {
+        return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
     }
 }
