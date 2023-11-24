@@ -23,7 +23,7 @@ public class Product {
     private String image;
 
     private  int quantity;
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Category category;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "orderCol")
