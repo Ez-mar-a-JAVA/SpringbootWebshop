@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: admin_navbar"></div>
+<body>
+
+
+<div align="center">
+    <h1>All of our Products</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                <th scope="col" class="text-center">Title</th>
+                <th scope="col" class="text-center">Description</th>
+                <th scope="col" class="text-center">Price</th>
+                <th scope="col" class="text-center">Quantity</th>
+                <th scope="col" class="text-center">Category</th>
+                <th scope="col" class="text-center">Image</th>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.title}"></td>
+                <td th:text="${product.description}"></td>
+                <td th:text="${product.price}"></td>
+                <td th:text="${product.quantity}"></td>
+                <td th:text="${product.category.name}"></td>
+                <td>
+                    <img height="30p x" width="100px" th:src="@{'/images/' + ${product.image}}" alt="Product Image" />
+                    </td>
+                <tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+</body>
+</html>

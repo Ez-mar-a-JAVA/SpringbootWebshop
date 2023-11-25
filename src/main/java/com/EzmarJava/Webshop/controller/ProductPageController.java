@@ -1,37 +1,31 @@
 package com.EzmarJava.Webshop.controller;
 
 
-import com.EzmarJava.Webshop.model.Product;
-import com.EzmarJava.Webshop.service.impl.ProductPageServiceImpl;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
+import com.EzmarJava.Webshop.service.impl.ProductServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 
-@RequestMapping("/home")
+
 public class ProductPageController {
 
-    private ProductPageServiceImpl productService;
 
-    public String getProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            Model model) {
+    @Autowired
+    private  ProductServiceImpl productService;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+    @GetMapping("productpage")
+    public String loadPruductPage(Model model){
+        model.addAttribute("products",productService.findAllProducts());
+        return "/product/productpage";
 
-        Page<Product> products = productService.getAllProducts(pageable);
-
-        model.addAttribute("products", products);
-
-        return "productList"; // Return the name of the view (productList.html in this case)
     }
+
+
 
 }
