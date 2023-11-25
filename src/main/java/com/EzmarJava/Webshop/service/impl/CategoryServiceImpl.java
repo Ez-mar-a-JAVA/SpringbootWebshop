@@ -4,7 +4,9 @@ import com.EzmarJava.Webshop.dto.category.CategoryDTO;
 import com.EzmarJava.Webshop.dto.category.CreateCategoryDTO;
 import com.EzmarJava.Webshop.dto.category.UpdateCategoryDTO;
 import com.EzmarJava.Webshop.model.Category;
+import com.EzmarJava.Webshop.model.Product;
 import com.EzmarJava.Webshop.repository.CategoryRepository;
+import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,13 @@ public class CategoryServiceImpl implements CategoryService
     private final ModelMapper modelMapper;
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(ModelMapper modelMapper, CategoryRepository categoryRepository)
+    private final ProductRepository productRepository;
+
+    public CategoryServiceImpl(ModelMapper modelMapper, CategoryRepository categoryRepository, ProductRepository productRepository)
     {
         this.modelMapper = modelMapper;
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -60,6 +65,14 @@ public class CategoryServiceImpl implements CategoryService
     @Override
     public void deleteCategory(Long id)
     {
+        Category category = categoryRepository.getById(id);
+        List<Product> products = productRepository.findAllByCategory(category);
+
+        for(Product product : products)
+        {
+            productRepository.delete(product);
+        }
+
         categoryRepository.deleteById(id);
     }
 }

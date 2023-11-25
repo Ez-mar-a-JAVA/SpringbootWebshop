@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<div th:replace="fragments/header :: header"></div>
+<body style="height: 100vh">
+<div th:replace="fragments/header :: admin_navbar"></div>
+
+<div class="container  d-flex justify-content-center align-items-center">
+  <div class="card py-2 px-3" style="width: 20rem;">
+    <div class="card-body">
+      <h6 class="fs-4 card-subtitle mb-2 text-body-secondary text-center">Create Product</h6>
+      <p class="card-text text-center">
+      <form th:action="@{/admin/create-product}" th:object="${product}" method="post" role="form" class="row g-3" enctype="multipart/form-data">
+
+        <div class="col-md-12">
+          <label for="title" class="form-label">Title</label>
+          <input th:field="*{title}" type="text" class="form-control" id="title" name="title" placeholder="Title" required>
+          <div th:if="${#fields.hasErrors('title')}" class="text-danger"
+               th:errors="*{title}"></div>
+        </div>
+
+      <div class="col-md-12">
+        <label for="description" class="form-label">Description</label>
+        <textarea th:field="*{description}" type="text" class="form-control" id="description" name="description" placeholder="Description" required></textarea>
+        <div th:if="${#fields.hasErrors('description')}" class="text-danger"
+             th:errors="*{description}"></div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="price" class="form-label">Price</label>
+        <input th:field="*{price}" type="number" class="form-control" id="price" name="price" placeholder="Price" required>
+        <div th:if="${#fields.hasErrors('price')}" class="text-danger"
+             th:errors="*{price}"></div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input th:field="*{quantity}" type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" required>
+        <div th:if="${#fields.hasErrors('quantity')}" class="text-danger"
+             th:errors="*{quantity}"></div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="category" class="form-label">Category</label>
+        <select th:field="*{category}" class="form-select" id="category" required>
+          <option selected value="">Select a Category</option>
+          <span th:each="category : ${categories}">
+            <option th:value="${category.id}" th:text="${category.name}"></option>
+          </span>
+        </select>
+        <div th:if="${#fields.hasErrors('category')}" class="text-danger"
+             th:errors="*{category}"></div>
+      </div>
+
+      <div class="col-md-12">
+        <label for="image" class="form-label">Image</label>
+        <input th:field="*{image}" type="file" class="form-control" id="image" name="image" placeholder="Image" required>
+        <div th:if="${#fields.hasErrors('image')}" class="text-danger"
+             th:errors="*{image}"></div>
+      </div>
+
+        <div class="d-grid gap-2 col-12 mx-auto mt-4">
+          <button class="btn btn-block btn-outline-primary py-2 px-3" type="submit">Save</button>
+        </div>
+      </form>
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</html>

@@ -14,19 +14,21 @@ import java.util.Set;
 @NoArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title ;
     private String description;
     private double price ;
     private String image;
 
     private  int quantity;
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Category category;
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "orderCol")
     private Order order;
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Cart cart;
 
 }
