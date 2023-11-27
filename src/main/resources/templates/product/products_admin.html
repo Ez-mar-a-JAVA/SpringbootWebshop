@@ -43,8 +43,8 @@
                     <img height="30px" width="100px" th:src="@{'/images/' + ${product.image}}" alt="Product Image" />
                 </td>
                 <td class="d-flex flex-row text-center justify-content-center align-items-center">
-                    <a class="btn btn-primary custom-btn">Edit</a>
-                    <form  class="form-text d-flex align-items-center m-0" th:object="${product}" method="post">
+                    <a th:href="@{/admin/edit-product/{productId}(productId=${product.id})}" class="btn btn-primary custom-btn">Edit</a>
+                    <form th:action="@{/admin/delete-product/{productId}(productId=${product.id})}"  class="form-text d-flex align-items-center m-0" th:object="${product}" method="post">
                         <button type="button" data-bs-toggle="modal" th:data-bs-target="'#confirmDeleteModal-' + ${product.id}" class="btn btn-danger custom-btn">Delete</button>
 
                         <!-- Confirmation modal to delete LeaveType -->
