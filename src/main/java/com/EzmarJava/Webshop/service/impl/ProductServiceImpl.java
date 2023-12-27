@@ -53,65 +53,24 @@ public class ProductServiceImpl implements ProductService
     }
 
     @Override
-    public List<ProductDTO> findAllProducts()
-    {
-        return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
-    }
-
-    @Override
-
-    public Page<ProductDTO> findProducts(int page, int size, String sortDirection, String sortField, String keyword) {
-        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
-        Order order = new Order(direction, sortField);
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
-
-        Page<Product> pageProducts;
-        if(keyword == null) {
-            pageProducts = productRepository.findAll(pageable);
-        }else {
-            pageProducts = productRepository.findByTitleContainingIgnoreCase(keyword, pageable);
-        }
-
-        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
-    }
-
-    @Override
-    public Page<ProductDTO> findProductsByCategoryId(int page, int size, String sortDirection, String sortField, Long categoryId)
-    {
-        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
-        Order order = new Order(direction, sortField);
-
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
-
-        Page<Product> pageProducts = productRepository.findByCategory_Id(categoryId, pageable);
-
-        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
-
-    public void deleteProduct(Long productId)
-    {
-        productRepository.deleteById(productId);
-    }
-
-    @Override
-    public void updateProduct(UpdateProductDTO updateProductDTO)
+    public void updateProduct (UpdateProductDTO updateProductDTO)
     {
         Product product = productRepository.getById(updateProductDTO.getId());
         MultipartFile image = null;
 
         // Get image from DTO
-        if(!updateProductDTO.getImage().isEmpty())
+        if (!updateProductDTO.getImage().isEmpty())
         {
-             image = updateProductDTO.getImage();
+            image = updateProductDTO.getImage();
         }
 
 
-        if(image != null)
+        if (image != null)
         {
             // Store file on disk by relative path
             String filePath = fileStorageService.store(image, "src/main/resources/static/images/");
 
-            if(!product.getImage().equalsIgnoreCase(filePath))
+            if (!product.getImage().equalsIgnoreCase(filePath))
             {
                 // Set image path
                 product.setImage(filePath);
@@ -130,7 +89,56 @@ public class ProductServiceImpl implements ProductService
     }
 
     @Override
-    public ProductDTO getById(Long productId)
+    public List<ProductDTO> findAllProducts()
+    {
+        return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+
+    public Page<ProductDTO> findProducts(int page, int size, String sortDirection, String sortField, String keyword)
+    {
+        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
+        Order order = new Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<Product> pageProducts;
+        if (keyword == null)
+        {
+            pageProducts = productRepository.findAll(pageable);
+        } else
+        {
+            pageProducts = productRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        }
+
+        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
+    }
+
+    @Override
+    public Page<ProductDTO> findProductsByCategoryId(int page, int size, String sortDirection, String sortField, Long categoryId)
+    {
+        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
+        Order order = new Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<Product> pageProducts = productRepository.findByCategory_Id(categoryId, pageable);
+
+        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
+
+
+    }
+
+    public void deleteProduct (Long productId)
+    {
+        productRepository.deleteById(productId);
+    }
+
+
+
+    @Override
+    public ProductDTO getById (Long productId)
     {
         return modelMapper.map(productRepository.getById(productId), ProductDTO.class);
 
