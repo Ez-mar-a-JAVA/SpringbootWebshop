@@ -2,6 +2,7 @@ package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.product.CreateProductDTO;
 import com.EzmarJava.Webshop.dto.product.ProductDTO;
+import com.EzmarJava.Webshop.dto.product.UpdateProductDTO;
 import com.EzmarJava.Webshop.model.Product;
 import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.service.FileStorageService;
@@ -58,6 +59,7 @@ public class ProductServiceImpl implements ProductService
     }
 
     @Override
+
     public Page<ProductDTO> findProducts(int page, int size, String sortDirection, String sortField, String keyword) {
         Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
         Order order = new Order(direction, sortField);
@@ -85,5 +87,52 @@ public class ProductServiceImpl implements ProductService
         Page<Product> pageProducts = productRepository.findByCategory_Id(categoryId, pageable);
 
         return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
+
+    public void deleteProduct(Long productId)
+    {
+        productRepository.deleteById(productId);
+    }
+
+    @Override
+    public void updateProduct(UpdateProductDTO updateProductDTO)
+    {
+        Product product = productRepository.getById(updateProductDTO.getId());
+        MultipartFile image = null;
+
+        // Get image from DTO
+        if(!updateProductDTO.getImage().isEmpty())
+        {
+             image = updateProductDTO.getImage();
+        }
+
+
+        if(image != null)
+        {
+            // Store file on disk by relative path
+            String filePath = fileStorageService.store(image, "src/main/resources/static/images/");
+
+            if(!product.getImage().equalsIgnoreCase(filePath))
+            {
+                // Set image path
+                product.setImage(filePath);
+            }
+        }
+
+
+        product.setTitle(updateProductDTO.getTitle());
+        product.setDescription(updateProductDTO.getDescription());
+        product.setPrice(updateProductDTO.getPrice());
+        product.setCategory(updateProductDTO.getCategory());
+
+
+        // Save product to DB
+        productRepository.save(product);
+    }
+
+    @Override
+    public ProductDTO getById(Long productId)
+    {
+        return modelMapper.map(productRepository.getById(productId), ProductDTO.class);
+
     }
 }
