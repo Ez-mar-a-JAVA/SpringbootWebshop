@@ -7,8 +7,14 @@ import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.service.FileStorageService;
 import com.EzmarJava.Webshop.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,5 +55,22 @@ public class ProductServiceImpl implements ProductService
     public List<ProductDTO> findAllProducts()
     {
         return productRepository.findAll().stream().map(product -> modelMapper.map(product, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductDTO> findProducts(int page, int size, String sortDirection, String sortField, String keyword) {
+        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
+        Order order = new Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<Product> pageProducts;
+        if(keyword == null) {
+            pageProducts = productRepository.findAll(pageable);
+        }else {
+            pageProducts = productRepository.findByTitleContainingIgnoreCase(keyword, pageable);
+        }
+
+        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
     }
 }
