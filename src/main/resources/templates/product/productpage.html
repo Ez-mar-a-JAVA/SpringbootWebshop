@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+
+    <style>
+        .wrapper {
+            min-height: 100% !important;
+            margin-bottom: -50px; /* Height of the footer */
+            padding-bottom: 50px; /* Height of the footer */
+        }
+    </style>
+</head>
+
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: navbar"></div>
+<body>
+
+<div class="page-container">
+
+    <div class="content-wrap">
+        <form th:action="@{/products}" id="searchForm" class="mb-5 mt-1">
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    <div class="col-md-3 mt-2">
+                        <div class="search d-flex flex-row">
+                            <input id="keyword" type="search" name="keyword" th:value="${keyword}" required class="form-control mx-2"
+                                   placeholder="Enter keyword">
+                            <button type="submit" class="btn btn-primary mx-2">Search</button>
+                            <button id="btnClear" class="btn btn-info">Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mt-2">
+                        <div class="d-flex flex-row">
+                            Sort by:
+                            <p th:replace="fragments/sorting :: sorting('title','Title')"></p>
+                            <p th:replace="fragments/sorting :: sorting('price','Price')"></p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mt-2">
+                        <!-- Add a dropdown for selecting the category -->
+                        <label for="categoryId">Category:</label>
+                        <select id="categoryId" name="categoryId" onchange="this.form.submit()">
+                            <option value="" th:selected="${selectedCategoryId == null}">All Categories</option>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == selectedCategoryId}"></option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <div class="container wrapper mx-auto" th:if="${products.size() > 0}">
+            <div class="row">
+                <div class="col-md-3 mb-5" th:each="product : ${products}">
+                    <div class="card">
+                        <img height="300px" width="100%" th:src="@{'/images/' + ${product.image}}" alt="Product Image">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${product.title}"></h5>
+                            <p th:text="${product.description}"></p>
+                            <p>Available quantity: <strong lass="card-text" th:text="${product.quantity}"></strong></p>
+                            <p>Price: <strong class="card-text" th:text="${product.price}"></strong>Ft</p>
+                            <button class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" th:unless="${products.size() > 0}">
+            <span>No products found</span>
+        </div>
+
+
+        <!-- Pagination -->
+        <nav aria-label="Pagination" th:if="${totalPages > 0}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a th:replace="fragments/paging :: paging(1, '<<', 'First Page')"></a>
+                </li>
+                <li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a th:replace="fragments/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page')"></a>
+                </li>
+                <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                    <a class="page-link" href="#">...</a>
+                </li>
+                <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                    th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                    <a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
+                </li>
+                <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                    <a class="page-link" href="#">...</a>
+                </li>
+                <li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a th:replace="fragments/paging :: paging(${currentPage + 1},'Next', 'Next Page')"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Last Page')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- sortable Table and Pagination Bar -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // ...
+
+            $("#btnClear").on("click", function (e) {
+                e.preventDefault();
+                $("#keyword").text("");
+                window.location = "[[@{/products}]]";
+            });
+        });
+
+        function changePageSize() {
+            $("#searchForm").submit();
+        }
+    </script>
+
+</body>
+</html>
