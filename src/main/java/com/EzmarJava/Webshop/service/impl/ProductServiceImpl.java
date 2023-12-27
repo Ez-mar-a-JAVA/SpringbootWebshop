@@ -73,4 +73,17 @@ public class ProductServiceImpl implements ProductService
 
         return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
     }
+
+    @Override
+    public Page<ProductDTO> findProductsByCategoryId(int page, int size, String sortDirection, String sortField, Long categoryId)
+    {
+        Direction direction = sortDirection.equalsIgnoreCase("desc") ? Direction.DESC : Direction.ASC;
+        Order order = new Order(direction, sortField);
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
+
+        Page<Product> pageProducts = productRepository.findByCategory_Id(categoryId, pageable);
+
+        return pageProducts.map(product -> modelMapper.map(product, ProductDTO.class));
+    }
 }

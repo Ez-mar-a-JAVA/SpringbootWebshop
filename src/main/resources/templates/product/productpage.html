@@ -35,11 +35,20 @@
                     </div>
 
                     <div class="col-md-3 mt-2">
-                        <div class="search d-flex flex-row">
+                        <div class="d-flex flex-row">
                             Sort by:
                             <p th:replace="fragments/sorting :: sorting('title','Title')"></p>
                             <p th:replace="fragments/sorting :: sorting('price','Price')"></p>
                         </div>
+                    </div>
+
+                    <div class="col-md-3 mt-2">
+                        <!-- Add a dropdown for selecting the category -->
+                        <label for="categoryId">Category:</label>
+                        <select id="categoryId" name="categoryId" onchange="this.form.submit()">
+                            <option value="" th:selected="${selectedCategoryId == null}">All Categories</option>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == selectedCategoryId}"></option>
+                        </select>
                     </div>
 
                 </div>
