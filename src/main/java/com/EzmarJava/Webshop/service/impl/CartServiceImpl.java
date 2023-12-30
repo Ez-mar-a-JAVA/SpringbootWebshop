@@ -71,4 +71,10 @@ public class CartServiceImpl implements CartService {
         user.getCart().setQuantity(totalQuantity);
         userRepository.save(user);
     }
+
+    @Override
+    public int getCartQuantity(User user) {
+        Cart cart = cartRepository.getCartByUser(user);
+        return cart.getQuantity();
+    }
 }

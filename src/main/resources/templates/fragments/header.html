@@ -36,7 +36,11 @@
                 </li>
 
                 <li class="nav-item" >
-                    <a aria-current="page" class="nav-link active" th:href="@{/products}" >Cart</a>
+                    <div th:if="${cartQuantity ne null}" class="cart-quantity">
+                        <a aria-current="page" class="nav-link active">
+                            Cart <span class="badge badge-pill badge-primary" th:text="${cartQuantity}"></span>
+                        </a>
+                    </div>
                 </li>
 
                 <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">

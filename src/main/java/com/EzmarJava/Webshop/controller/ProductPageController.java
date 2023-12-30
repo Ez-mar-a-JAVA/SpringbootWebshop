@@ -36,12 +36,15 @@ public class ProductPageController {
     public String showProductPage(
             @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "6") int size, @RequestParam(defaultValue = "id,asc") String[] sort,
-            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long categoryId,Authentication authentication,
             Model model
     ) {
         String sortField = sort[0];
         String sortDirection = sort[1];
         Page<ProductDTO> productsPage;
+
+        User user = ((User) authentication.getPrincipal());
+        int cartQuantity = cartService.getCartQuantity(user);
 
         if(categoryId == null) {
             productsPage = productService.findProducts(page, size, sortDirection, sortField, keyword);
@@ -65,6 +68,7 @@ public class ProductPageController {
         model.addAttribute("selectedCategoryId", categoryId); // Pass the selected category ID to the view
         model.addAttribute("categories", categories); // Pass all categories to the view
         model.addAttribute("addCartItemDTO", new AddCartItemDTO()); // Add the AddCartItemDTO to the model
+        model.addAttribute("cartQuantity", cartQuantity);
 
 
         return "product/productpage";
