@@ -1,5 +1,6 @@
 package com.EzmarJava.Webshop.config;
 
+import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.Role;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.repository.RoleRepository;
@@ -44,7 +45,8 @@ public class SeedDataConfiguration
             authorities.add(adminRole);
 
             // Create admin user
-            User admin = userRepository.save(new User("admin", "admin@example.com", passwordEncoder.encode("password"), authorities));
+            User admin = new User("admin", "admin@example.com", passwordEncoder.encode("password"), authorities);
+
             userRepository.save(admin);
         };
     }

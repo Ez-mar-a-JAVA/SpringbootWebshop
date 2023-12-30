@@ -1,6 +1,7 @@
 package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.RegistrationDTO;
+import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.Role;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.repository.RoleRepository;
@@ -46,6 +47,11 @@ public class UserServiceImpl implements UserService
         Set<Role> authorities = new HashSet<>();
         authorities.add(role);
         user.setAuthorities(authorities);
+
+        // Init cart for user
+        Cart cart = new Cart();
+        cart.setQuantity(0);
+        user.setCart(cart);
 
         // save user
         userRepository.save(user);

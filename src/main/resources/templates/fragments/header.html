@@ -31,6 +31,14 @@
                     <a aria-current="page" class="nav-link active" th:href="@{/}" >Home</a>
                 </li>
 
+                <li class="nav-item" >
+                    <a aria-current="page" class="nav-link active" th:href="@{/products}" >Products</a>
+                </li>
+
+                <li class="nav-item" >
+                    <a aria-current="page" class="nav-link active" th:href="@{/products}" >Cart</a>
+                </li>
+
                 <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a aria-current="page" class="nav-link active" th:href="@{/admin}" >Admin</a>
                 </li>
@@ -47,9 +55,7 @@
                     <a aria-current="page" class="nav-link active" th:href="@{/register}" >Register</a>
                 </li>
 
-                <li class="nav-item" >
-                    <a aria-current="page" class="nav-link active" th:href="@{/productpage}" >productPage</a>
-                </li>
+
 
             </ul>
         </div>
