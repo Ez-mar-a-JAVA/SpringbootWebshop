@@ -1,6 +1,7 @@
 package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.cartItem.AddCartItemDTO;
+import com.EzmarJava.Webshop.exception.CartException;
 import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.CartItem;
 import com.EzmarJava.Webshop.model.Product;
@@ -32,44 +33,53 @@ public class CartServiceImpl implements CartService {
     @Override
     public void addToCart(AddCartItemDTO cartItemDTO, Long userId) {
 
-        // Get current user
-        User user = userRepository.findById(userId).get();
-
-        // Check if cart has been created
-        if(user.getCart() == null) {
-            Cart cart = new Cart();
-            cart.setQuantity(0);
-            cart.setUser(user);
-
-            cartRepository.save(cart);
-
-            user.setCart(cart);
-
-            userRepository.save(user);
-        }
-
         // Get product
         Product product = productRepository.getById(cartItemDTO.getProductId());
 
-        // Check if product exists
-        // If so update quantity, do not create a new CartItem, use existing one
-        CartItem cartItem = user.getCart().getCartItem().stream()
-                .filter(item -> item.getProduct().getId().equals(product.getId()))
-                .findFirst()
-                .orElse(new CartItem());
+        // Check if quantity exceeds available quantity
+        if(!(product.getQuantity() < cartItemDTO.getQuantity())) {
+            // Get current user
+            User user = userRepository.findById(userId).get();
 
-        cartItem.setProduct(product);
-        cartItem.setQuantity(cartItem.getQuantity() + cartItemDTO.getQuantity());
-        cartItem.setCart(user.getCart());
+            // Check if cart has been created
+            if(user.getCart() == null) {
+                Cart cart = new Cart();
+                cart.setQuantity(0);
+                cart.setUser(user);
 
-        user.getCart().getCartItem().add(cartItem);
+                cartRepository.save(cart);
 
-        // Update carts overall quantity
-        int totalQuantity = user.getCart().getCartItem().stream()
-                .mapToInt(CartItem::getQuantity)
-                .sum();
-        user.getCart().setQuantity(totalQuantity);
-        userRepository.save(user);
+                user.setCart(cart);
+
+                userRepository.save(user);
+            }
+
+
+
+            // Check if product exists
+            // If so update quantity, do not create a new CartItem, use existing one
+            CartItem cartItem = user.getCart().getCartItem().stream()
+                    .filter(item -> item.getProduct().getId().equals(product.getId()))
+                    .findFirst()
+                    .orElse(new CartItem());
+
+            cartItem.setProduct(product);
+            cartItem.setQuantity(cartItem.getQuantity() + cartItemDTO.getQuantity());
+            cartItem.setCart(user.getCart());
+
+            user.getCart().getCartItem().add(cartItem);
+
+            // Update carts overall quantity
+            int totalQuantity = user.getCart().getCartItem().stream()
+                    .mapToInt(CartItem::getQuantity)
+                    .sum();
+            user.getCart().setQuantity(totalQuantity);
+            userRepository.save(user);
+        }else {
+            throw new CartException("Product quantity exceeds available quantity!");
+        }
+
+
     }
 
     @Override

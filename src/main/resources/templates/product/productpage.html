@@ -19,9 +19,23 @@
 <div th:replace="fragments/header :: navbar"></div>
 <body>
 
+<!-- Toast message -->
+<div aria-live="polite" aria-atomic="true" class="bg-body-secondary position-relative bd-example-toasts rounded-3" th:if="${errorMessage}">
+    <div class="toast-container p-3 top-0 end-0" >
+        <div class="toast" id="toast">
+            <div class="toast-header">
+                <strong class="me-auto text-danger fs-6">Error</strong>
+            </div>
+            <div class="toast-body text-danger fs-8" th:text="${errorMessage}"></div>
+        </div>
+    </div>
+</div>
+
+
 <div class="page-container">
 
-    <div class="content-wrap">
+
+    <div class="content-wrap mt-2">
         <form th:action="@{/products}" id="searchForm" class="mb-5 mt-1">
             <div class="container">
                 <div class="row d-flex justify-content-between">
@@ -133,6 +147,8 @@
             $("#searchForm").submit();
         }
     </script>
+
+    <script type="text/javascript" th:src="@{/js/toast.js}"></script>
 
 </body>
 </html>

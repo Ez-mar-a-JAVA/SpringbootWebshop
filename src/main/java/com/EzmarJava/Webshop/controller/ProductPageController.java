@@ -3,6 +3,7 @@ package com.EzmarJava.Webshop.controller;
 import com.EzmarJava.Webshop.dto.cartItem.AddCartItemDTO;
 import com.EzmarJava.Webshop.dto.category.CategoryDTO;
 import com.EzmarJava.Webshop.dto.product.ProductDTO;
+import com.EzmarJava.Webshop.exception.CartException;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.service.CartService;
 import com.EzmarJava.Webshop.service.CategoryService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -70,20 +72,31 @@ public class ProductPageController {
         model.addAttribute("addCartItemDTO", new AddCartItemDTO()); // Add the AddCartItemDTO to the model
         model.addAttribute("cartQuantity", cartQuantity);
 
+        // Check for the flash attribute and add it to the model
+        if (model.containsAttribute("errorMessage")) {
+            model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
+        }
 
         return "product/productpage";
     }
 
 
     @PostMapping("/addToCart")
-    public String addToCart(@ModelAttribute AddCartItemDTO addCartItemDTO, Authentication authentication, @RequestParam("productId") Long productId) {
+    public String addToCart(@ModelAttribute AddCartItemDTO addCartItemDTO, Authentication authentication, @RequestParam("productId") Long productId,
+                            RedirectAttributes redirectAttributes) {
 
         // Get current user id
         Long userId = ((User) authentication.getPrincipal()).getId();
 
         addCartItemDTO.setProductId(productId);
 
-        cartService.addToCart(addCartItemDTO, userId);
+        try {
+            cartService.addToCart(addCartItemDTO, userId);
+        } catch (CartException cartException) {
+            // Add flash attribute
+            redirectAttributes.addFlashAttribute("errorMessage", cartException.getMessage());
+        }
+
         return "redirect:/products";
     }
 }
