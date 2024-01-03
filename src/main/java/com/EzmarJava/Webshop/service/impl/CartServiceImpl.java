@@ -75,6 +75,11 @@ public class CartServiceImpl implements CartService {
                     .sum();
             user.getCart().setQuantity(totalQuantity);
             userRepository.save(user);
+
+            // If cart is updated than update product quantity
+            product.setQuantity(product.getQuantity() - cartItemDTO.getQuantity());
+            productRepository.save(product);
+
         }else {
             throw new CartException("Product quantity exceeds available quantity!");
         }
