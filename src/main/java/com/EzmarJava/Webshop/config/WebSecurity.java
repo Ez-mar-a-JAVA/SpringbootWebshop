@@ -31,8 +31,11 @@ public class WebSecurity
                         authorize
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAnyRole("ADMIN")
-                                .requestMatchers(new AntPathRequestMatcher("/protected/**")).authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/products")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                .anyRequest().authenticated()
                 ) // temporal
 
                 .formLogin(form -> form
