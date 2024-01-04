@@ -45,8 +45,11 @@ public class ProductPageController {
         String sortDirection = sort[1];
         Page<ProductDTO> productsPage;
 
-        User user = ((User) authentication.getPrincipal());
-        int cartQuantity = cartService.getCartQuantity(user);
+        int cartQuantity = 0;
+        if(authentication != null) {
+            User user = ((User) authentication.getPrincipal());
+            cartQuantity = cartService.getCartQuantity(user);
+        }
 
         if(categoryId == null) {
             productsPage = productService.findProducts(page, size, sortDirection, sortField, keyword);
