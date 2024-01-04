@@ -40,9 +40,11 @@ public class WebSecurity
 
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .usernameParameter("username")
-                        .defaultSuccessUrl("/")
                         .loginProcessingUrl("/login")
+                        .usernameParameter("username")
+                        .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/", true)
+
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
