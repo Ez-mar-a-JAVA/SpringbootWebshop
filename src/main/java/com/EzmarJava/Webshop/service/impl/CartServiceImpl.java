@@ -1,6 +1,8 @@
 package com.EzmarJava.Webshop.service.impl;
 
+import com.EzmarJava.Webshop.dto.cart.CartDTO;
 import com.EzmarJava.Webshop.dto.cartItem.AddCartItemDTO;
+import com.EzmarJava.Webshop.dto.cartItem.CartItemDTO;
 import com.EzmarJava.Webshop.exception.CartException;
 import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.CartItem;
@@ -102,6 +104,22 @@ public class CartServiceImpl implements CartService {
     public int getCartQuantity(User user) {
         Cart cart = cartRepository.getCartByUser(user);
         return cart.getQuantity();
+    }
+
+    @Override
+    public CartDTO getUsersCart(User user) {
+        // Get cart
+        Cart cart = cartRepository.getCartByUser(user);
+
+        List<CartItemDTO> cartItemDTOS = cart.getCartItem().stream().map(
+                cartItem -> modelMapper.map(cartItem, CartItemDTO.class)).collect(Collectors.toList()
+        );
+
+
+
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        cartDTO.setCartItems(cartItemDTOS);
+        return cartDTO;
     }
 
 }
