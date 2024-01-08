@@ -8,14 +8,15 @@ import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.CartItem;
 import com.EzmarJava.Webshop.model.Product;
 import com.EzmarJava.Webshop.model.User;
+import com.EzmarJava.Webshop.repository.CartItemRepository;
 import com.EzmarJava.Webshop.repository.CartRepository;
 import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.repository.UserRepository;
 import com.EzmarJava.Webshop.service.CartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,12 +27,14 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final ModelMapper modelMapper;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
 
-    public CartServiceImpl(UserRepository userRepository, CartRepository cartRepository, ModelMapper modelMapper, ProductRepository productRepository) {
+    public CartServiceImpl(UserRepository userRepository, CartRepository cartRepository, ModelMapper modelMapper, ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
+        this.cartItemRepository = cartItemRepository;
     }
 
 
@@ -146,20 +149,22 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void deleteCartItem(Long cartItemId, User user) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("Cart item not found with ID: " + cartItemId));
 
+        // Remove the cart item from the user's cart
+        cartItem.getCart().getCartItem().remove(cartItem);
+
+        // Remove the association with the cart
+        cartItem.setCart(null);
+        cartItem.setProduct(null);
+
+        // Delete the cart item from the database
+        cartItemRepository.delete(cartItem);
+
+        // Get cart
+        Cart cart = cartRepository.getCartByUser(user);
+        cart.setQuantity(cart.getQuantity() - cartItem.getQuantity());
+        cartRepository.save(cart);
     }
-
-    @Override
-    public void initCart(User user) {
-        if (user.getCart() == null) {
-            Cart cart = new Cart();
-            cart.setQuantity(0);
-            cart.setUser(user);
-
-            cartRepository.save(cart);
-            user.setCart(cart);
-            userRepository.save(user);
-        }
-    }
-
 }

@@ -28,14 +28,16 @@ public class CustomUserDetailsService implements UserDetailsService
         User user = userRepository.findByUsername(username);
         if(user != null)
         {
-            // Init cart
-            Cart cart = new Cart();
-            cart.setQuantity(0);
-            cart.setUser(user);
+           if(user.getCart() == null){
+               // Init cart
+               Cart cart = new Cart();
+               cart.setQuantity(0);
+               cart.setUser(user);
 
-            cartRepository.save(cart);
-            user.setCart(cart);
-            userRepository.save(user);
+               cartRepository.save(cart);
+               user.setCart(cart);
+               userRepository.save(user);
+           }
             return user;
         }else
         {
