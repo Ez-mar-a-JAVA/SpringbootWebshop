@@ -50,9 +50,6 @@ public class UserServiceImpl implements UserService
         authorities.add(role);
         user.setAuthorities(authorities);
 
-        // Init cart
-        cartService.initCart(user);
-
         // save user
         userRepository.save(user);
     }
