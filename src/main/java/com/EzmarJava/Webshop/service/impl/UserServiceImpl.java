@@ -1,11 +1,11 @@
 package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.RegistrationDTO;
-import com.EzmarJava.Webshop.model.Cart;
 import com.EzmarJava.Webshop.model.Role;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.repository.RoleRepository;
 import com.EzmarJava.Webshop.repository.UserRepository;
+import com.EzmarJava.Webshop.service.CartService;
 import com.EzmarJava.Webshop.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,14 @@ public class UserServiceImpl implements UserService
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private CartService cartService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository1, PasswordEncoder passwordEncoder1)
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository1, PasswordEncoder passwordEncoder1, CartService cartService)
     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository1;
         this.passwordEncoder = passwordEncoder1;
+        this.cartService = cartService;
     }
 
     @Override
@@ -48,10 +50,8 @@ public class UserServiceImpl implements UserService
         authorities.add(role);
         user.setAuthorities(authorities);
 
-        // Init cart for user
-        Cart cart = new Cart();
-        cart.setQuantity(0);
-        user.setCart(cart);
+        // Init cart
+        cartService.initCart(user);
 
         // save user
         userRepository.save(user);

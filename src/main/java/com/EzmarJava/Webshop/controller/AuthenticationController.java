@@ -2,10 +2,10 @@ package com.EzmarJava.Webshop.controller;
 
 import com.EzmarJava.Webshop.dto.RegistrationDTO;
 import com.EzmarJava.Webshop.model.User;
+import com.EzmarJava.Webshop.service.CartService;
 import com.EzmarJava.Webshop.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +21,7 @@ public class AuthenticationController
     public AuthenticationController(UserService userService)
     {
         this.userService = userService;
+
     }
 
     @GetMapping("/login")

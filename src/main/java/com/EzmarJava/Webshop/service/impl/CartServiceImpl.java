@@ -15,6 +15,7 @@ import com.EzmarJava.Webshop.service.CartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,8 @@ public class CartServiceImpl implements CartService {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
     }
+
+
 
     @Override
     public void addToCart(AddCartItemDTO cartItemDTO, Long userId)
@@ -103,6 +106,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public int getCartQuantity(User user) {
         Cart cart = cartRepository.getCartByUser(user);
+        if(cart == null) {
+            return 0;
+        }
         return cart.getQuantity();
     }
 
@@ -111,15 +117,49 @@ public class CartServiceImpl implements CartService {
         // Get cart
         Cart cart = cartRepository.getCartByUser(user);
 
-        List<CartItemDTO> cartItemDTOS = cart.getCartItem().stream().map(
-                cartItem -> modelMapper.map(cartItem, CartItemDTO.class)).collect(Collectors.toList()
-        );
-
+        List<CartItemDTO> cartItemDTOS =
+             cartItemDTOS = cart.getCartItem().stream().map(
+                    cartItem -> modelMapper.map(cartItem, CartItemDTO.class)).collect(Collectors.toList()
+            );
 
 
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
         cartDTO.setCartItems(cartItemDTOS);
         return cartDTO;
+    }
+
+    @Override
+    public int getCartTotal(User user) {
+        // Get cart
+        Cart cart = cartRepository.getCartByUser(user);
+
+        // Get cart items
+        List<CartItem> cartItems = cart.getCartItem();
+
+        int total = 0;
+        for(CartItem cartItem : cartItems) {
+            total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+        }
+
+        return total;
+    }
+
+    @Override
+    public void deleteCartItem(Long cartItemId, User user) {
+
+    }
+
+    @Override
+    public void initCart(User user) {
+        if (user.getCart() == null) {
+            Cart cart = new Cart();
+            cart.setQuantity(0);
+            cart.setUser(user);
+
+            cartRepository.save(cart);
+            user.setCart(cart);
+            userRepository.save(user);
+        }
     }
 
 }

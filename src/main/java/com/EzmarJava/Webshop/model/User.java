@@ -29,7 +29,7 @@ public class User extends AbstractTimeEntity implements UserDetails
     @OneToMany
    private Set<Order>orders;
 
-    @OneToOne
+    @OneToOne()
     @JoinColumn(name = "cart_id")
     private Cart cart; // Add this field
 
