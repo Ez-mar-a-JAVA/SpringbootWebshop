@@ -150,7 +150,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteCartItem(Long cartItemId, User user) {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Cart item not found with ID: " + cartItemId));
+                .orElseThrow(() -> new CartException("Cart item not found with ID: " + cartItemId));
 
         // Remove the cart item from the user's cart
         cartItem.getCart().getCartItem().remove(cartItem);
@@ -166,5 +166,23 @@ public class CartServiceImpl implements CartService {
         Cart cart = cartRepository.getCartByUser(user);
         cart.setQuantity(cart.getQuantity() - cartItem.getQuantity());
         cartRepository.save(cart);
+    }
+
+    @Override
+    public void decreaseCartItem(Long cartItemId, User user) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new CartException("Cart item not found with ID: " + cartItemId));
+
+        if(cartItem.getQuantity() == 1) {
+            deleteCartItem(cartItemId, user);
+        } else {
+            // Decrease item quantity
+            Cart cart = cartRepository.getCartByUser(user);
+            cart.setQuantity(cart.getQuantity() - 1);
+            cartRepository.save(cart);
+
+            cartItem.setQuantity(cartItem.getQuantity()-1);
+            cartItemRepository.save(cartItem);
+        }
     }
 }

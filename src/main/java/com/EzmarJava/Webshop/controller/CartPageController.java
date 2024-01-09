@@ -36,8 +36,16 @@ public class CartPageController {
     public String deleteCartItem(@PathVariable Long cartItemId, Authentication authentication, Model model) {
         User user = ((User) authentication.getPrincipal());
 
-        System.out.println("ran");
         cartService.deleteCartItem(cartItemId, user);
         return "redirect:/cart";
     }
+
+    @PostMapping("/cart/decrease-cart-item/{cartItemId}")
+    public String decreaseCartItemQuantity(@PathVariable Long cartItemId, Authentication authentication, Model model) {
+        User user = ((User) authentication.getPrincipal());
+
+        cartService.decreaseCartItem(cartItemId, user);
+        return "redirect:/cart";
+    }
+
 }
