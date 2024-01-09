@@ -18,7 +18,7 @@ public class Cart {
 
     private int quantity;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> cartItem;
 
     @OneToOne(mappedBy = "cart")

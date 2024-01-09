@@ -12,4 +12,5 @@ public interface CartService {
     void deleteCartItem(Long cartItemId, User user);
     void decreaseCartItem(Long cartItemId, User user);
     void increaseCartItem(Long cartItemId, User user);
+    void clearCart(User user);
 }

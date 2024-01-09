@@ -1,5 +1,7 @@
 package com.EzmarJava.Webshop.config;
 
+import com.EzmarJava.Webshop.security.CustomLogoutHandler;
+import com.EzmarJava.Webshop.service.CartService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,12 +11,21 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity
 {
+
+    private final CartService cartService;
+
+    public WebSecurity(CartService cartService)
+    {
+        this.cartService = cartService;
+    }
+
     @Bean
     public static PasswordEncoder passwordEncoder()
     {
@@ -37,7 +48,6 @@ public class WebSecurity
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                                 .anyRequest().authenticated()
                 ) // temporal
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
@@ -49,7 +59,14 @@ public class WebSecurity
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .deleteCookies("JSESSIONID")
+                        .addLogoutHandler(logoutHandler())
                         .logoutSuccessUrl("/"))
+
                 .build();
+    }
+
+    @Bean
+    public LogoutHandler logoutHandler() {
+        return new CustomLogoutHandler(cartService);
     }
 }

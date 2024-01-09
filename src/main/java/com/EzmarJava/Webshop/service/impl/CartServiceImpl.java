@@ -13,6 +13,8 @@ import com.EzmarJava.Webshop.repository.CartRepository;
 import com.EzmarJava.Webshop.repository.ProductRepository;
 import com.EzmarJava.Webshop.repository.UserRepository;
 import com.EzmarJava.Webshop.service.CartService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +31,16 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public CartServiceImpl(UserRepository userRepository, CartRepository cartRepository, ModelMapper modelMapper, ProductRepository productRepository, CartItemRepository cartItemRepository) {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
+
     }
 
 
@@ -221,5 +227,32 @@ public class CartServiceImpl implements CartService {
             // Show error because there aren't enough products
             throw new CartException("Cannot increase cart item quantity, not enough products!");
         }
+    }
+
+    @Override
+    @Transactional
+    public void clearCart(User user) {
+        Cart cart = cartRepository.getCartByUser(user);
+        cart.setQuantity(0);
+
+        System.out.println(cart.getCartItem().size());
+
+        for (CartItem cartItem : cart.getCartItem()) {
+            Product product = cartItem.getProduct();
+            product.setQuantity(product.getQuantity() + cartItem.getQuantity());
+            productRepository.save(product);
+            entityManager.flush();
+
+            // Remove the association with the cart
+            cartItem.setCart(null);
+            cartItem.setProduct(null);
+
+            cartItemRepository.delete(cartItem);
+        }
+
+        // Clear the cart items from the cart
+        cart.getCartItem().clear();
+
+        cartRepository.save(cart);
     }
 }
