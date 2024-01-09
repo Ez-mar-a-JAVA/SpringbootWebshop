@@ -152,6 +152,8 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new CartException("Cart item not found with ID: " + cartItemId));
 
+        Product product = cartItem.getProduct();
+
         // Remove the cart item from the user's cart
         cartItem.getCart().getCartItem().remove(cartItem);
 
@@ -161,6 +163,9 @@ public class CartServiceImpl implements CartService {
 
         // Delete the cart item from the database
         cartItemRepository.delete(cartItem);
+
+        product.setQuantity(product.getQuantity() + cartItem.getQuantity());
+        productRepository.save(product);
 
         // Get cart
         Cart cart = cartRepository.getCartByUser(user);
@@ -173,6 +178,8 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new CartException("Cart item not found with ID: " + cartItemId));
 
+        Product product = cartItem.getProduct();
+
         if(cartItem.getQuantity() == 1) {
             deleteCartItem(cartItemId, user);
         } else {
@@ -180,6 +187,9 @@ public class CartServiceImpl implements CartService {
             Cart cart = cartRepository.getCartByUser(user);
             cart.setQuantity(cart.getQuantity() - 1);
             cartRepository.save(cart);
+
+            product.setQuantity(product.getQuantity() + 1);
+            productRepository.save(product);
 
             cartItem.setQuantity(cartItem.getQuantity()-1);
             cartItemRepository.save(cartItem);
@@ -195,7 +205,11 @@ public class CartServiceImpl implements CartService {
         Product product = cartItem.getProduct();
 
 
-        if(product.getQuantity() >= cartItem.getQuantity()+1) {
+        if(product.getQuantity() >= 1) {
+            product.setQuantity(product.getQuantity() - 1);
+            productRepository.save(product);
+
+
             // Increase
             Cart cart = cartRepository.getCartByUser(user);
             cart.setQuantity(cart.getQuantity()+1);
