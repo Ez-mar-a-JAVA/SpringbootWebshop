@@ -21,6 +21,19 @@
 
 
 <body style="height: 80vh;">
+<!-- Toast message -->
+<div aria-live="polite" aria-atomic="true" class="bg-body-secondary position-relative bd-example-toasts rounded-3" th:if="${errorMessage}">
+    <div class="toast-container p-3 top-0 end-0" >
+        <div class="toast" id="toast">
+            <div class="toast-header">
+                <strong class="me-auto text-danger fs-6">Error</strong>
+            </div>
+            <div class="toast-body text-danger fs-8" th:text="${errorMessage}"></div>
+        </div>
+    </div>
+</div>
+
+
 <div th:replace="fragments/header :: navbar"></div>
 
 <div class="container-fluid w-100 d-flex justify-content-center mt-5 px-5 flex-column">
@@ -50,7 +63,7 @@
                         </button>
                     </form>
 
-                    <form class="form-text d-flex align-items-center m-0">
+                    <form class="form-text d-flex align-items-center m-0" method="post" th:object="${cartItem}" th:action="@{/cart/increase-cart-item/{cartItemId}(cartItemId = ${cartItem.getId()})}">
                         <button type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="blue" class="bi bi-plus-circle" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -84,6 +97,7 @@
 <!-- Imports for Jquery Data Tables -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<script type="text/javascript" th:src="@{/js/toast.js}"></script>
 <script>
     let table = new DataTable('#table', {
         responsive: true,

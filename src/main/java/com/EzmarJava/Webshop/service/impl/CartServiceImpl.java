@@ -185,4 +185,27 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItem);
         }
     }
+
+    @Override
+    public void increaseCartItem(Long cartItemId, User user) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new CartException("Cart item not found with ID: " + cartItemId));
+
+        // Get product
+        Product product = cartItem.getProduct();
+
+
+        if(product.getQuantity() >= cartItem.getQuantity()+1) {
+            // Increase
+            Cart cart = cartRepository.getCartByUser(user);
+            cart.setQuantity(cart.getQuantity()+1);
+            cartRepository.save(cart);
+
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+            cartItemRepository.save(cartItem);
+        } else {
+            // Show error because there aren't enough products
+            throw new CartException("Cannot increase cart item quantity, not enough products!");
+        }
+    }
 }
