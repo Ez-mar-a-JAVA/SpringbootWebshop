@@ -31,6 +31,18 @@
                     <a aria-current="page" class="nav-link active" th:href="@{/}" >Home</a>
                 </li>
 
+                <li class="nav-item" >
+                    <a aria-current="page" class="nav-link active" th:href="@{/products}" >Products</a>
+                </li>
+
+                <li class="nav-item" >
+                    <div th:if="${cartQuantity ne null}" class="cart-quantity">
+                        <a th:href="@{/cart}" aria-current="page" class="nav-link active">
+                            Cart <span class="badge badge-pill badge-primary" th:text="${cartQuantity}"></span>
+                        </a>
+                    </div>
+                </li>
+
                 <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a aria-current="page" class="nav-link active" th:href="@{/admin}" >Admin</a>
                 </li>
@@ -47,9 +59,7 @@
                     <a aria-current="page" class="nav-link active" th:href="@{/register}" >Register</a>
                 </li>
 
-                <li class="nav-item" >
-                    <a aria-current="page" class="nav-link active" th:href="@{/productpage}" >productPage</a>
-                </li>
+
 
             </ul>
         </div>

@@ -5,6 +5,7 @@ import com.EzmarJava.Webshop.model.Role;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.repository.RoleRepository;
 import com.EzmarJava.Webshop.repository.UserRepository;
+import com.EzmarJava.Webshop.service.CartService;
 import com.EzmarJava.Webshop.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,14 @@ public class UserServiceImpl implements UserService
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
+    private CartService cartService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository1, PasswordEncoder passwordEncoder1)
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository1, PasswordEncoder passwordEncoder1, CartService cartService)
     {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository1;
         this.passwordEncoder = passwordEncoder1;
+        this.cartService = cartService;
     }
 
     @Override

@@ -28,7 +28,9 @@ public class Product {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "orderCol")
     private Order order;
-    @ManyToOne(fetch=FetchType.LAZY)
-    private Cart cart;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartItem> cartItems;
+
 
 }

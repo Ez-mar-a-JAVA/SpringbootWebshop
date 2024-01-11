@@ -23,8 +23,4 @@ public class Order {
     private int quantity;
     @OneToMany(mappedBy = "order")
     private List<Product> products;
-    @OneToMany(mappedBy = "order")
-    private List<Quantity>quantities;
-
-
 }

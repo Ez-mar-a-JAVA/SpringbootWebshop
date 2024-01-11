@@ -29,6 +29,10 @@ public class User extends AbstractTimeEntity implements UserDetails
     @OneToMany
    private Set<Order>orders;
 
+    @OneToOne()
+    @JoinColumn(name = "cart_id")
+    private Cart cart; // Add this field
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_junction",
