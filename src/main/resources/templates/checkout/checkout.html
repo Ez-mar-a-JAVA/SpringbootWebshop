@@ -4,6 +4,12 @@
 >
 <div th:replace="fragments/header :: header"></div>
 
+<head>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <!--Stripe JavaScript Library-->
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+
 <body>
 <div th:replace="fragments/header :: navbar"></div>
 
@@ -55,7 +61,7 @@
         </div>
         <div class="mb-3">
           <label for="email">Email <span class="text-muted"></span></label>
-          <input type="email" class="form-control" id="email" placeholder="you@example.com" th:value="${checkoutDto.email}" th:field="${checkoutDto.email}" required>
+          <input type="email" class="form-control" id="email1" placeholder="you@example.com" th:value="${checkoutDto.email}" th:field="${checkoutDto.email}" required>
           <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
         </div>
         <div class="mb-3">
@@ -70,12 +76,96 @@
         <hr class="mb-4">
         <h4 class="mb-3">Payment</h4>
         <div class="d-block my-3">
+          <form action="#" id="payment-form" method="post">
+            <input id="api-key" type="hidden" th:value="${stripePublicKey}">
+            <div class="form-group">
+              <label class="font-weight-medium" for="card-element">
+                Enter credit or debit card below
+              </label>
+              <div class="w-100" id="card-element">
+                <!-- A Stripe Element will be inserted here. -->
+              </div>
+            </div>
+            <div class="form-group">
+              <input class="form-control" id="email" name="email"
+                     placeholder="Email Address" type="email" required>
+            </div>
+            <!-- Used to display Element errors. -->
+            <div class="text-danger w-100" id="card-errors" role="alert"></div>
+            <div class="form-group pt-2">
+              <button class="btn btn-primary btn-block" id="submitButton" type="submit">
+                Pay With Your Card
+              </button>
+              <div class="small text-muted mt-2">
+                Pay securely with Stripe.
+              </div>
+            </div>
 
+
+          </form>
         </div>
 
     </div>
   </div>
 </div>
 
+
+<!--custom javascript for handling subscription-->
+<script>
+  $(function () {
+    var API_KEY = $('#api-key').val();
+    // Create a Stripe client.
+    var stripe = Stripe(API_KEY);
+
+    // Create an instance of Elements.
+    var elements = stripe.elements();
+
+    // Create an instance of the card Element.
+    var card = elements.create('card');
+
+    // Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function (event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    // Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      // handle payment
+      handlePayments();
+    });
+
+    //handle card submission
+    function handlePayments() {
+      stripe.createToken(card).then(function (result) {
+        if (result.error) {
+          // Inform the user if there was an error.
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+        } else {
+          // Send the token to your server.
+          var token = result.token.id;
+          var email = $('#email').val();
+          $.post(
+                  "/create-charge",
+                  {email: email, token: token},
+                  function (data) {
+                   // alert(data.details);
+                    console.log(data);
+                  }, 'json');
+        }
+      });
+    }
+  });
+</script>
 </body>
 </html>
