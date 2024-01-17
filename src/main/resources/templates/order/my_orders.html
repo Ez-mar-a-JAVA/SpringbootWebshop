@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<div th:replace="fragments/header :: header"></div>
+<!-- CSS for jquery data tables -->
+<head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <style>
+        .custom-btn {
+            width: 78px !important;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+<h2>My Orders</h2>
+
+<div class="container-fluid w-100 d-flex justify-content-center mt-5 px-5">
+    <div class="table-responsive w-100">
+        <table id="table" class="table table-striped text-center">
+            <thead>
+            <tr class="table-dark">
+                <th scope="col" class="text-center">Order ID</th>
+                <th scope="col" class="text-center">Order status</th>
+                <th scope="col" class="text-center">Order total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td>
+                    <a href="#" th:text="${order.id}"></a>
+                </td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.total} + ' $'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<!-- Imports for Jquery Data Tables -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<script>
+    let table = new DataTable('#table', {
+        responsive: true,
+        autoWidth: false
+    });
+</script>
+</body>
+</html>

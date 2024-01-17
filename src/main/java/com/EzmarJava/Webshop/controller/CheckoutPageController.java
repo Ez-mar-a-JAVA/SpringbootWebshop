@@ -4,6 +4,7 @@ import com.EzmarJava.Webshop.dto.Response;
 import com.EzmarJava.Webshop.dto.checkout.CheckoutUserDataDTO;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.service.CartService;
+import com.EzmarJava.Webshop.service.OrderService;
 import com.EzmarJava.Webshop.service.StripeService;
 import com.EzmarJava.Webshop.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -22,14 +23,16 @@ public class CheckoutPageController {
     private final CartService cartService;
     private final UserService userService;
     private final StripeService stripeService;
+    private final OrderService orderService;
     private final String API_PUBLIC_KEY = "pk_test_51OXVOhBvafzlZiOsp7gyzRyvT5QooQGDs4oG5lTR4s7dPxunz1UgmnqjEHVD2sWt70RcTmYhYj17a6geYhtH1f0k00Da4MQ4q3";
 
 
 
-    public CheckoutPageController(CartService cartService, UserService userService, StripeService stripeService) {
+    public CheckoutPageController(CartService cartService, UserService userService, StripeService stripeService, OrderService orderService) {
         this.cartService = cartService;
         this.userService = userService;
         this.stripeService = stripeService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/checkout")
@@ -74,16 +77,18 @@ public class CheckoutPageController {
 
         //create charge
         String chargeId = stripeService.createCharge(email, token, convertedToCents); //$9.99 USD
+        System.out.println(chargeId);
         if (chargeId == null) {
             return new Response(false, "An error occurred while trying to create a charge.");
         }
 
         // Success
 
+        // Create order for user
+        orderService.createOrder(user.getId());
+
         // Clear cart
         cartService.clearCart(user);
-
-        // Create order for user
 
         // Redirect user to orders page -> will happen on frontend if success
         return new Response(true, "Success! Your charge id is " + chargeId);
