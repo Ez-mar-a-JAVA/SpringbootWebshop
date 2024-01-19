@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<div th:replace="fragments/header :: header"></div>
+<body style="height: 80vh">
+<div th:replace="fragments/header :: admin_navbar"></div>
+
+
+<div class="container  d-flex justify-content-center align-items-center">
+  <div class="card py-2 px-3" style="width: 20rem;">
+    <div class="card-body">
+      <h6 class="fs-4 card-subtitle mb-2 text-body-secondary text-center">Update Order Status</h6>
+      <p class="card-text text-center">
+      <form th:action="@{/admin/update-order-status/{orderId}(orderId=${order.id})}" th:object="${order}" method="post" role="form" class="row g-3" enctype="multipart/form-data">
+
+        <div class="col-md-12">
+          <label for="status" class="form-label">Status</label>
+          <input th:field="*{status}" type="text" class="form-control" id="status" name="status" placeholder="status" required>
+          <div th:if="${#fields.hasErrors('status')}" class="text-danger"
+               th:errors="*{status}"></div>
+        </div>
+
+        <div class="d-grid gap-2 col-12 mx-auto mt-4">
+          <button class="btn btn-block btn-outline-primary py-2 px-3" type="submit">Save</button>
+        </div>
+      </form>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
