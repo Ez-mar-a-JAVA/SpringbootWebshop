@@ -29,10 +29,10 @@
             <h6 class="my-0" th:text="${cartItem.product.title}"></h6>
             Quantity: <span th:text="${cartItem.quantity}"></span>
           </div>
-          <span class="text-muted" th:text="${cartItem.product.price * cartItem.quantity}"></span>Ft
+          <span class="text-muted" th:text="${cartItem.product.price * cartItem.quantity}"></span>$
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span>Total (HUF)</span>
+          <span>Total (USD)</span>
           <strong th:text="${cartTotal}"></strong>
         </li>
       </ul>
@@ -61,7 +61,7 @@
         </div>
         <div class="mb-3">
           <label for="email">Email <span class="text-muted"></span></label>
-          <input type="email" class="form-control" id="email1" placeholder="you@example.com" th:value="${checkoutDto.email}" th:field="${checkoutDto.email}" required>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com" th:value="${checkoutDto.email}" th:field="${checkoutDto.email}" required>
           <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
         </div>
         <div class="mb-3">
@@ -86,10 +86,7 @@
                 <!-- A Stripe Element will be inserted here. -->
               </div>
             </div>
-            <div class="form-group">
-              <input class="form-control" id="email" name="email"
-                     placeholder="Email Address" type="email" required>
-            </div>
+
             <!-- Used to display Element errors. -->
             <div class="text-danger w-100" id="card-errors" role="alert"></div>
             <div class="form-group pt-2">
@@ -151,6 +148,7 @@
           // Inform the user if there was an error.
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
+          alert(result.error.message);
         } else {
           // Send the token to your server.
           var token = result.token.id;
@@ -162,6 +160,8 @@
                    // alert(data.details);
                     console.log(data);
                   }, 'json');
+
+        window.location.href = "/my-orders";
         }
       });
     }

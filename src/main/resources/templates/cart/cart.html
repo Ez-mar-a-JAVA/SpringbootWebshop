@@ -85,7 +85,7 @@
             </tbody>
         </table>
         <div>
-            <a class="btn btn-primary">Checkout</a>
+            <a th:if="${cart.quantity > 0}" class="btn btn-primary" th:href="@{/checkout}">Checkout</a>
             <span><bold>Cart Total:</bold> <span th:text="${cartTotal}"></span> </span>
         </div>
     </div>

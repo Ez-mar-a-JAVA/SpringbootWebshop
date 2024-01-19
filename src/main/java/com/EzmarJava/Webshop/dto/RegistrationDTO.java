@@ -24,6 +24,9 @@ public class RegistrationDTO
     @NotEmpty(message = "Lastname must not be empty!")
     private String lastname;
 
+    @NotEmpty(message = "Address must not be empty!")
+    private String address;
+
     @NotEmpty(message = "Email must not be empty!")
     @Email(message = "Email must be valid!")
     private String email;
