@@ -13,5 +13,5 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
     List<Order> findOrdersByUser(User user);
 
-
+    boolean existsOrderByUserAndId(User user, Long orderId);
 }

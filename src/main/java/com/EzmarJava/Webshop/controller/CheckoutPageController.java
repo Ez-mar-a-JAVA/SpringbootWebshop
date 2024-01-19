@@ -86,6 +86,7 @@ public class CheckoutPageController {
 
         // Create order for user
         orderService.createOrder(user.getId());
+        System.out.println("here");
 
         // Clear cart
         cartService.clearCart(user);

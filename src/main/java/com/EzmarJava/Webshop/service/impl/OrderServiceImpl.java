@@ -1,5 +1,6 @@
 package com.EzmarJava.Webshop.service.impl;
 
+import com.EzmarJava.Webshop.exception.OrderException;
 import com.EzmarJava.Webshop.model.*;
 import com.EzmarJava.Webshop.repository.CartRepository;
 import com.EzmarJava.Webshop.repository.OrderItemRepository;
@@ -57,12 +58,23 @@ public class OrderServiceImpl implements OrderService {
            // orderItemRepository.save(orderItem);
         }
 
-
         orderRepository.save(order);
     }
 
     @Override
     public List<Order> getAllOrdersByUser(User user) {
         return orderRepository.findOrdersByUser(user);
+    }
+
+    @Override
+    public Order getOrderById(Long orderId, User user) {
+
+        // Check if order belongs to the user or the user is and admin
+        if(orderRepository.existsOrderByUserAndId(user, orderId) || user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equalsIgnoreCase("ROLE_ADMIN"))) {
+            return orderRepository.getById(orderId);
+        }else {
+            throw new OrderException("You cannot access this order!");
+        }
+
     }
 }
