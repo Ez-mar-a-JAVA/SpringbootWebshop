@@ -1,6 +1,7 @@
 package com.EzmarJava.Webshop.service.impl;
 
 import com.EzmarJava.Webshop.dto.RegistrationDTO;
+import com.EzmarJava.Webshop.dto.checkout.CheckoutUserDataDTO;
 import com.EzmarJava.Webshop.model.Role;
 import com.EzmarJava.Webshop.model.User;
 import com.EzmarJava.Webshop.repository.RoleRepository;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService
         user.setFirstname(registrationDTO.getFirstname());
         user.setLastname(registrationDTO.getLastname());
         user.setEmail(registrationDTO.getEmail());
+        user.setAddress(registrationDTO.getAddress());
 
         // Encode password
         user.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
@@ -58,5 +60,23 @@ public class UserServiceImpl implements UserService
     public User findByUsername(String username)
     {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public void updateUser(CheckoutUserDataDTO checkoutUserDataDTO, Long userId) {
+        User user = userRepository.findById(userId).get();
+
+        user.setFirstname(checkoutUserDataDTO.getFirstname());
+        user.setLastname(checkoutUserDataDTO.getLastname());
+        user.setEmail(checkoutUserDataDTO.getEmail());
+        user.setUsername(checkoutUserDataDTO.getUsername());
+        user.setAddress(checkoutUserDataDTO.getAddress());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).get();
     }
 }

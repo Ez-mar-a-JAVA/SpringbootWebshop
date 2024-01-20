@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Objects;
 import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,12 +28,13 @@ public class User extends AbstractTimeEntity implements UserDetails
     private String password;
     private String phone;
     private String address;
-    @OneToMany
-   private Set<Order>orders;
 
     @OneToOne()
     @JoinColumn(name = "cart_id")
-    private Cart cart; // Add this field
+    private Cart cart;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -68,5 +71,10 @@ public class User extends AbstractTimeEntity implements UserDetails
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email); // Include relevant fields, excluding circular references
     }
 }

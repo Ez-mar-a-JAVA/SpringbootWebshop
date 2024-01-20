@@ -36,8 +36,8 @@ public class WebSecurity
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
         return http
-                .cors(Customizer.withDefaults())
-                .csrf(Customizer.withDefaults())
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable())
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -46,6 +46,7 @@ public class WebSecurity
                                 .requestMatchers(new AntPathRequestMatcher("/products")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/create-charge")).permitAll()
                                 .anyRequest().authenticated()
                 ) // temporal
                 .formLogin(form -> form

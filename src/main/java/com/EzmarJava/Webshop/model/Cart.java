@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -23,4 +24,9 @@ public class Cart {
 
     @OneToOne(mappedBy = "cart")
     private User user; // Change this field
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, quantity); // Include relevant fields, excluding circular references
+    }
 }

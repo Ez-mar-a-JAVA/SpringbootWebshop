@@ -25,12 +25,10 @@ public class Product {
     private  int quantity;
     @ManyToOne(fetch=FetchType.EAGER)
     private Category category;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "orderCol")
-    private Order order;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
 
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 }

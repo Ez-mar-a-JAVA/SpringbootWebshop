@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<div th:replace="fragments/header :: header"></div>
+<head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+</head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+
+<h2 style="margin-left: 50px; margin-top: 30px;">Order Items:</h2>
+<div class="container-fluid w-100 d-flex justify-content-center mt-5 px-5">
+    <div class="table-responsive w-100">
+        <table id="table" class="table table-striped text-center">
+            <thead>
+            <tr class="table-dark">
+                <th scope="col" class="text-center">Product title</th>
+                <th scope="col" class="text-center">Product quantity</th>
+                <th scope="col" class="text-center">Product price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderItem : ${order.orderItems}">
+                <td th:text="${orderItem.product.title}">
+
+                </td>
+                <td th:text="${orderItem.quantity}"></td>
+                <td th:text="${orderItem.product.price * orderItem.quantity} + ' $'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Imports for Jquery Data Tables -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<script>
+    let table = new DataTable('#table', {
+        responsive: true,
+        autoWidth: false
+    });
+</script>
+</body>
+</html>

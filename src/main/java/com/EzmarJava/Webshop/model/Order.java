@@ -17,10 +17,15 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch=FetchType.EAGER, optional = false)
-    private User user ;
-    private   double price ;
-    private int quantity;
-    @OneToMany(mappedBy = "order")
-    private List<Product> products;
+
+    private long total;
+
+    private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<OrderItem> orderItems;
 }
