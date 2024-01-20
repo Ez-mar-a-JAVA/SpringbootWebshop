@@ -37,7 +37,7 @@ public class ProductPageController {
     @GetMapping("/products")
     public String showProductPage(
             @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "6") int size, @RequestParam(defaultValue = "id,asc") String[] sort,
+            @RequestParam(defaultValue = "8") int size, @RequestParam(defaultValue = "id,asc") String[] sort,
             @RequestParam(required = false) Long categoryId,Authentication authentication,
             Model model
     ) {
