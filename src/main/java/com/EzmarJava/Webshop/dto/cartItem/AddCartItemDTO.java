@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class AddCartItemDTO
 {
     private Long productId;
-    private int quantity;
+    private int quantity = 1;
 }

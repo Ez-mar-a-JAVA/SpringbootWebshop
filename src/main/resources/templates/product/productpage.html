@@ -82,7 +82,7 @@
                             <p>Price: <strong class="card-text" th:text="${product.price}"></strong>Ft</p>
                             <form th:action="@{/addToCart}" method="post" th:object="${addCartItemDTO}">
                                 <input type="hidden" name="productId" th:value="${product.id}" />
-                                <input type="number" th:field="*{quantity}" required>
+                                <input type="number" th:value="*{quantity == 1} ?: 1" th:field="*{quantity}"  required>
                                 <button class="btn btn-primary">Add to Cart</button>
                             </form>
 
@@ -126,7 +126,6 @@
         </nav>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
 </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
